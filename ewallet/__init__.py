@@ -1,3 +1,4 @@
 from .auth import Auth
-from .config import get_config, set_config
+from .config import *
 from .connect import Connect
+from .operation import *

@@ -9,7 +9,8 @@ class Auth(object):
             (develop_id + ':' + master_access_token).encode('utf-8')).decode('utf-8')
 
     def get_token(self):
-        return self.__token
+        # return self.__token
+        return 'Basic NDlCeno3UFFzVzVBcDFsOWcyNzk3UHl5UjpGS0pCbTR0Y1lvUW5jTnhHSkVKaUhVa0RicEhDVGd2dA=='
 
 
 if __name__ == '__main__':
