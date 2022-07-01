@@ -1,11 +1,11 @@
 import requests
 import logging
-import config
+from ewallet.config import get_config
 
 
 class Connect(object):
     def __init__(self, router, auth):
-        self.url = config.get_config('default_host') + router
+        self.url = get_config('default_host') + router
         self.headers = {'Authorization': auth.get_token(), 'Content-Type': 'application/json'}
 
     def get(self, path_param=None):

@@ -23,5 +23,6 @@ class Quote(object):
         return json.loads(json_string, object_hook=self.dict_to_object)
 
 
-q = Quote("USD", "EUR")
-print(q)
+if __name__ == '__main__':
+    q = Quote("USD", "EUR")
+    print(q)
