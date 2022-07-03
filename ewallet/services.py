@@ -17,6 +17,11 @@ def create_quote(auth, quote):
 
 def create_conversion(auth, conversion):
     connect = Connect('/gateway/v1/ew-conversions', auth)
-    print(conversion.object_to_json())
     response = connect.post(conversion.object_to_json())
+    return response.json(), response.status_code
+
+
+def get_conversion(auth, conversion_request_id):
+    connect = Connect('/gateway/v1/ew-conversions', auth)
+    response = connect.get(conversion_request_id)
     return response.json(), response.status_code
