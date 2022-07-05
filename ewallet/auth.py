@@ -1,5 +1,7 @@
 import base64
 
+from requests.auth import AuthBase
+
 
 class Auth(object):
     def __init__(self, develop_id, master_access_token):
@@ -9,8 +11,17 @@ class Auth(object):
             (develop_id + ':' + master_access_token).encode('utf-8')).decode('utf-8')
 
     def get_token(self):
-        # return self.__token
-        return 'Basic NDlCeno3UFFzVzVBcDFsOWcyNzk3UHl5UjpGS0pCbTR0Y1lvUW5jTnhHSkVKaUhVa0RicEhDVGd2dA=='
+        return self.__token
+
+
+class TokenAuth(AuthBase):
+    def __init__(self, develop_id, master_access_token):
+        self.__token = 'Basic ' + base64.urlsafe_b64encode(
+            (develop_id + ':' + master_access_token).encode('utf-8')).decode('utf-8')
+
+    def __call__(self, r):
+        r.headers['Authorization'] = self.__token
+        return r
 
 
 if __name__ == '__main__':

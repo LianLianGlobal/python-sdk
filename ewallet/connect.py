@@ -12,15 +12,16 @@ class Connect(object):
     def get(self, path_param=None):
         try:
             if path_param:
-                return self._session.get(self.url + '/' + path_param, headers=self.headers)
-            return self._session.get(self.url, headers=self.headers)
+                return self._session.get(self.url + '/' + str(path_param), headers=self.headers)
+            return self._session.get(self.url, headers=self.headers, timeout=get_config('connection_timeout'))
         except Exception as e:
             logging.error(e)
             return None
 
     def post(self, data):
         try:
-            response = self._session.post(self.url, headers=self.headers, data=data)
+            response = self._session.post(self.url, headers=self.headers, data=data,
+                                          timeout=get_config('connection_timeout'))
             return response
         except Exception as e:
             logging.error(e)
@@ -28,7 +29,8 @@ class Connect(object):
 
     def delete(self, path_param):
         try:
-            response = self._session.delete(self.url + '/' + path_param, headers=self.headers)
+            response = self._session.delete(self.url + '/' + str(path_param), headers=self.headers,
+                                            timeout=get_config('connection_timeout'))
             return response
         except Exception as e:
             logging.error(e)

@@ -3,7 +3,8 @@ TEST_HOST = 'http://192.168.132.148:8086'
 
 _config = {
     'default_host': TEST_HOST,
-    'default_upload_threshold': 1024 * 1024 * 10
+    'connection_timeout': 10,  # 10 seconds
+    'default_upload_threshold': 1024 * 1024 * 10  # 10MB
 }
 
 
