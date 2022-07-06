@@ -129,8 +129,9 @@ class Payee(object):
             raise ValueError('bank_info must be BankInfo')
         self.bank_info = bank_info.__dict__
         self.file_folder_id = file_folder_id
-        if type(additional_info) is AdditionalInfo:
-            self.additional_info = additional_info.__dict__
+        # todo: check the format of additional_info
+        if type(additional_info) is list:
+            self.additional_info = additional_info
 
     def to_json(self):
         return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=False)
@@ -182,6 +183,48 @@ class Payout(object):
                 raise ValueError('additional_info is required for CNY')
             else:
                 raise ValueError('additional_info must be list')
+
+    def to_json(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=False)
+
+    def __str__(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=False, indent=4)
+
+
+class FileInfo(object):
+    def __init__(self, file_id=None, file_name=None, title=None, page_size=20, page_number=1, start_time=None,
+                 end_time=None):
+        if file_id is not None:
+            self.file_id = str(file_id)
+        if file_name is not None:
+            self.file_name = file_name
+        if title is not None:
+            self.title = title
+        self.page_size = int(page_size)
+        self.page_number = int(page_number)
+        if start_time is not None:
+            self.start_time = int(start_time)
+        if end_time is not None:
+            self.end_time = int(end_time)
+
+    def to_json(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=False)
+
+    def __str__(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=False, indent=4)
+
+
+class FileFolderInfo(object):
+    def __init__(self, file_ids, file_folder_name, purpose, additional_info=None):
+        if purpose not in ['PAYOUT', 'PAYEE']:
+            raise ValueError('purpose must be PAYOUT or PAYEE')
+        self.purpose = str(purpose)
+        if type(file_ids) is not list:
+            raise ValueError('file_ids must be list')
+        self.file_ids = [str(file_id) for file_id in file_ids]
+        self.file_folder_name = str(file_folder_name)
+        if type(additional_info) is list:
+            self.additional_info = additional_info
 
     def to_json(self):
         return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=False)

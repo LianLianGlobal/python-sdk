@@ -3,9 +3,10 @@ import unittest
 
 import ewallet
 from ewallet import utils, create_quote, create_payout
-from ewallet.models import Quote, Conversion, Payee, BaseInfoIndividual, BankInfo, Address, Payout
+from ewallet.models import Quote, Conversion, Payee, BaseInfoIndividual, BankInfo, Address, Payout, AdditionalInfo, \
+    FileFolderInfo
 
-auth = ewallet.Auth('8ZCZo2rqOb2swvSzTlc7v472G', 'czCAB1FftSbNfLnP1jTOYkmg1RtDfecR')
+auth = ewallet.TokenAuth('8ZCZo2rqOb2swvSzTlc7v472G', 'czCAB1FftSbNfLnP1jTOYkmg1RtDfecR')
 
 
 class BalanceTest(unittest.TestCase):
@@ -76,7 +77,7 @@ class PayoutTest(unittest.TestCase):
         timestamp = int(utils.timestamp())
         payout_request_ids = []
         for i in range(5):
-            payout_request_ids.append(str(i+timestamp))
+            payout_request_ids.append(str(i + timestamp))
         globals()['payout_request_ids'] = payout_request_ids
 
         quote_response, _ = ewallet.create_quote(auth, Quote('USD', 'CNY'))
@@ -99,6 +100,46 @@ class PayoutTest(unittest.TestCase):
             data, code = ewallet.get_payout(auth, payout_request_id)
             self.assertEqual(200, code)
             self.assertEqual(payout_request_id, data['request_id'])
+
+
+class SupportServiceTest(unittest.TestCase):
+    def test_create_file_folder(self):
+        file_ids = [
+            "8536706480177799168",
+            "8536706480179634176",
+            "8536706734738235392",
+            "8536706734739808256"
+        ]
+
+        additional_info = [
+            AdditionalInfo('product_name', 'milk'),
+            AdditionalInfo('quantity', '12')
+        ]
+        data, code = ewallet.create_file_folder(auth, FileFolderInfo(file_ids, 'just for test', 'PAYOUT', additional_info))
+        self.assertEqual(200, code)
+        self.assertIn('id', data)
+        globals()['file_folder_id'] = data['id']
+
+    def test_get_file_folder_info(self):
+        data, code = ewallet.get_file_folder_info(auth, globals()['file_folder_id'])
+        self.assertEqual(200, code)
+        self.assertEqual(globals()['file_folder_id'], data['id'])
+
+    def test_delete_file_folder(self):
+        data, code = ewallet.delete_file_folder(auth, globals()['file_folder_id'])
+        self.assertEqual(200, code)
+        self.assertEqual('OK', data)
+        data, code = ewallet.delete_file_folder(auth, globals()['file_folder_id'])
+        self.assertEqual(400, code)
+        self.assertIn('FileFolder not found.', data)
+        file_ids = [
+            "8536706480177799168",
+            "8536706480179634176",
+            "8536706734738235392",
+            "8536706734739808256"
+        ]
+        data, code = ewallet.create_file_folder(auth, FileFolderInfo(file_ids, 'just for test', 'PAYOUT'))
+        globals()['file_folder_id'] = data['id']
 
 
 if __name__ == '__main__':
