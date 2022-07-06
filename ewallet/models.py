@@ -1,15 +1,31 @@
+# -*- coding: utf-8 -*-
+"""
+@Project : python-sdk
+@Author  : yangdm002
+@Email   : yangdm002@lianlianpay.com
+@Time    : 2022/7/6 16:00
+"""
 import json
 
 from ewallet import utils
 
 
 class Quote(object):
+    """Quote object."""
     def __init__(self, sell_currency, buy_currency, validity='T_0'):
+        """Initialize Quote object.
+
+        Args:
+            sell_currency (str): The currency that the client sells (in 3-letter ISO-4217 format)
+            buy_currency (str): The currency that the client buys (in 3-letter ISO-4217 format)
+            validity (str): When is the rate valid, default value: `T_0`
+        """
         self.sell_currency = sell_currency
         self.buy_currency = buy_currency
         self.validity = validity
 
     def to_json(self):
+        """Convert object to json string."""
         return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=False)
 
     def __str__(self):
@@ -26,7 +42,15 @@ class Quote(object):
 
 
 class Balance(object):
+    """Balance object."""
     def __init__(self, account_id, currency, available_amount):
+        """Initialize Balance object.
+
+        Args:
+            account_id (str): Unique identifier of the LianLianGlobal account
+            currency (str): Three-letter ISO 4217 currency code
+            available_amount (str): The available amount
+        """
         self.account_id = account_id
         self.currency = currency
         self.available_amount = available_amount
@@ -44,11 +68,27 @@ class Balance(object):
 
 
 class BaseInfoIndividual(object):
+    """BaseInfoIndividual object for individual in `create payee` operation."""
     def __init__(self, first_name, middle_name, last_name, id_type, id_number, email, country_code, phone_number,
                  phone_area_code, nickname):
+        """Initialize BaseInfoIndividual object.
+
+        Args:
+            first_name (str): The first name
+            middle_name (str): The middle name
+            last_name (str): The last name
+            id_type (str): The type of ID, one of `ID_TYPE_IDCARD`, `ID_TYPE_PASSPORT`, `ID_TYPE_HKID`, `ID_TYPE_TWID`
+            id_number (str): The ID number
+            email (str): The email address
+            country_code (str): The country code
+            phone_number (str): The phone number
+            phone_area_code (str): The area code of the phone number
+            nickname (str): The nickname
+        """
         self.first_name = first_name
         self.middle_name = middle_name
         self.last_name = last_name
+        # todo: check with developer of openapi
         self.id_type = id_type
         self.id_number = id_number
         self.email = email

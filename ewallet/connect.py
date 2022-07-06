@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+@Project : python-sdk
+@Author  : yangdm002
+@Email   : yangdm002@lianlianpay.com
+@Time    : 2022/7/6 16:00
+"""
 import os
 
 import requests
@@ -11,13 +18,13 @@ class Connect(object):
     Include GET, POST, DELETE, upload_file, download_file methods.
 
     Attributes:
-        router: router of LianLianPay ewallet OpenAPI.
+        router: router of LianLianGlobal ewallet OpenAPI.
         auth: authentication token.
     """
     def __init__(self, router, auth):
         """Initialize Connect object.
 
-        :param router: Router of LianLianPay ewallet OpenAPI.
+        :param router: Router of LianLianGlobal ewallet OpenAPI.
         :type router: str
         :param auth: Authentication token.
         :type auth: TokenAuth
@@ -88,7 +95,7 @@ class Connect(object):
 
         Download file by file_id and save it to customized Directory path.
 
-        :param file_id: The file id on LianLianPay's file server, can be customized when you upload a file.
+        :param file_id: The file id on LianLianGlobal's File Server, can be customized when you upload a file.
         :type file_id: str or int
         :param dir_path: Directory path to save downloaded file.
         :type dir_path: str

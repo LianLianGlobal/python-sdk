@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+@Project : python-sdk
+@Author  : yangdm002
+@Email   : yangdm002@lianlianpay.com
+@Time    : 2022/7/6 16:00
+"""
 US_HOST = 'https://us-api.lianlianglobal.com'
 TEST_HOST = 'http://192.168.132.148:8086'
 
@@ -15,8 +22,12 @@ def get_config(key=None):
     return _config
 
 
-def set_config(default_host=None, default_upload_threshold=None):
+def set_config(default_host=None, connection_timeout=None, file_connection_timeout=None, default_upload_threshold=None):
     if default_host:
         _config['default_host'] = default_host
+    if connection_timeout:
+        _config['connection_timeout'] = connection_timeout
+    if file_connection_timeout:
+        _config['file_connection_timeout'] = file_connection_timeout
     if default_upload_threshold:
         _config['default_upload_threshold'] = default_upload_threshold

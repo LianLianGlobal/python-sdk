@@ -1,8 +1,8 @@
-import random
+import os.path
 import unittest
 
 import ewallet
-from ewallet import utils, create_quote, create_payout
+from ewallet import utils
 from ewallet.models import Quote, Conversion, Payee, BaseInfoIndividual, BankInfo, Address, Payout, AdditionalInfo, \
     FileFolderInfo
 
@@ -91,7 +91,7 @@ class PayoutTest(unittest.TestCase):
             ]
             payout = Payout(910037181764652176384, quote_response, 5.2, 8636974357901546496, 'purpose', 'reference',
                             additional_info, payout_request_id)
-            data, code = create_payout(auth, payout)
+            data, code = ewallet.create_payout(auth, payout)
             self.assertEqual(200, code)
             self.assertEqual(payout_request_id, data['request_id'])
 
@@ -103,6 +103,37 @@ class PayoutTest(unittest.TestCase):
 
 
 class SupportServiceTest(unittest.TestCase):
+    def test_upload_file(self):
+        filepaths = [
+            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.zip',
+            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.rar',
+            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.pdf',
+            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.png',
+            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.jpg',
+            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.jpeg'
+        ]
+        if not os.path.exists(filepaths[0]):
+            self.skipTest("File not exist.")
+        for filepath in filepaths:
+            (_, filename) = os.path.split(filepath)
+            data, code = ewallet.upload_file(auth, filepath, 'test title', 'test notes')
+            self.assertEqual(200, code)
+            self.assertIn('id', data)
+            self.assertEqual(filename, data['name'])
+
+    def test_download_file(self):
+        dir_path = 'C:\\Users\\yangdm002\\Desktop\\OpenAPI test case\\files'
+        if not os.path.exists(dir_path):
+            self.skipTest("Directory not exist.")
+        file_ids = [
+            "8536706480177799168",
+            "8536706480179634176",
+            "8536706734738235392",
+            "8536706734739808256"
+        ]
+        for file_id in file_ids:
+            assert ewallet.download_file(auth, file_id, dir_path)
+
     def test_create_file_folder(self):
         file_ids = [
             "8536706480177799168",
@@ -110,12 +141,12 @@ class SupportServiceTest(unittest.TestCase):
             "8536706734738235392",
             "8536706734739808256"
         ]
-
         additional_info = [
             AdditionalInfo('product_name', 'milk'),
             AdditionalInfo('quantity', '12')
         ]
-        data, code = ewallet.create_file_folder(auth, FileFolderInfo(file_ids, 'just for test', 'PAYOUT', additional_info))
+        data, code = ewallet.create_file_folder(auth,
+                                                FileFolderInfo(file_ids, 'just for test', 'PAYOUT', additional_info))
         self.assertEqual(200, code)
         self.assertIn('id', data)
         globals()['file_folder_id'] = data['id']
