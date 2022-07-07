@@ -120,7 +120,7 @@ def get_payout(auth, payout_request_id):
 
 
 def upload_file(auth, file_path, title=None, notes=None):
-    """Upload a file to the LianLianGlobal's File Server.
+    """Upload a file to the LianLianGlobal File Server.
 
     The file will be used for `PAYOUT` or `PAYEE` operation.
 
@@ -166,7 +166,7 @@ def upload_file(auth, file_path, title=None, notes=None):
 
 
 def download_file(auth, file_id, dir_path):
-    """Download a file from LianLianGlobal's File Server by file id.
+    """Download a file from LianLianGlobal File Server by file id.
 
     Args:
         auth (TokenAuth): The auth token
@@ -202,9 +202,9 @@ def get_file_infos(auth, file_info):
 
 
 def create_file_folder(auth, file_folder_info):
-    """Create a file folder on LianLianGlobal's Database.
+    """Create a file folder on LianLianGlobal Database.
 
-    The file ids in file folder info is related with LianLianGlobal's File Server.
+    The file ids in file folder info is related with LianLianGlobal File Server.
 
     Args:
         auth (TokenAuth): The auth token

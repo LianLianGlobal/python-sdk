@@ -15,7 +15,7 @@ from ewallet.config import get_config
 class Connect(object):
     """Encapsulation of HTTP operations.
 
-    Include GET, POST, DELETE, upload_file, download_file methods.
+    Include get, post, delete, upload_file, download_file methods.
 
     Attributes:
         router: router of LianLianGlobal ewallet OpenAPI.
@@ -23,11 +23,10 @@ class Connect(object):
     """
     def __init__(self, router, auth):
         """Initialize Connect object.
-
-        :param router: Router of LianLianGlobal ewallet OpenAPI.
-        :type router: str
-        :param auth: Authentication token.
-        :type auth: TokenAuth
+        
+        Args:
+            router (str): Router of LianLianGlobal ewallet OpenAPI
+            auth (TokenAuth): TokenAuth
         """
         self.url = get_config('default_host') + router
         self.auth = auth
@@ -41,6 +40,16 @@ class Connect(object):
         # logging.getLogger().addHandler(handler)
 
     def get(self, path_param=None, data=None):
+        """Get method.
+        
+        Args:
+            path_param (int or str): Path parameter
+            data (str): Json data
+
+        Returns:
+            response (Response): Response object
+
+        """
         if path_param is not None:
             self.url += '/' + str(path_param)
         try:
@@ -55,6 +64,15 @@ class Connect(object):
             return None
 
     def post(self, data=None):
+        """ Post method.
+
+        Args:
+            data (str): Json data
+
+        Returns:
+            response (Response): Response object
+
+        """
         try:
             response = self._session.post(self.url, auth=self.auth, headers=self.headers, data=data,
                                           timeout=get_config('connection_timeout'))
@@ -67,6 +85,15 @@ class Connect(object):
             return None
 
     def delete(self, path_param):
+        """Delete method.
+        
+        Args:
+            path_param (int or str): Path parameter
+
+        Returns:
+            response (Response): Response object
+
+        """
         try:
             response = self._session.delete(self.url + '/' + str(path_param), auth=self.auth, headers=self.headers,
                                             timeout=get_config('connection_timeout'))
@@ -79,6 +106,16 @@ class Connect(object):
             return None
 
     def upload_file(self, files, data=None):
+        """Upload file to LianLianGlobal File Server.
+
+        Args:
+            files (dict): File to upload
+            data (str): Json data
+
+        Returns:
+            response (Response): Response object
+
+        """
         try:
             response = self._session.post(self.url, auth=self.auth, files=files, data=data,
                                           timeout=get_config('file_connection_timeout'))
@@ -92,15 +129,14 @@ class Connect(object):
 
     def download_file(self, file_id, dir_path):
         """Download file by file_id.
+        
+        Args:
+            file_id (str or int): The file id on LianLianGlobal File Server, can be customized when you upload a file
+            dir_path (str): Directory path to save downloaded file
 
-        Download file by file_id and save it to customized Directory path.
+        Returns:
+            response (bool): Download is success or not.
 
-        :param file_id: The file id on LianLianGlobal's File Server, can be customized when you upload a file.
-        :type file_id: str or int
-        :param dir_path: Directory path to save downloaded file.
-        :type dir_path: str
-        :return: Download is success or not.
-        :rtype: bool
         """
         try:
             response = self._session.get(self.url + '/' + str(file_id), auth=self.auth, stream=True,

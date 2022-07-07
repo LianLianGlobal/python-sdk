@@ -12,6 +12,7 @@ from ewallet import utils
 
 class Quote(object):
     """Quote object."""
+
     def __init__(self, sell_currency, buy_currency, validity='T_0'):
         """Initialize Quote object.
 
@@ -43,6 +44,7 @@ class Quote(object):
 
 class Balance(object):
     """Balance object."""
+
     def __init__(self, account_id, currency, available_amount):
         """Initialize Balance object.
 
@@ -69,6 +71,7 @@ class Balance(object):
 
 class BaseInfoIndividual(object):
     """BaseInfoIndividual object for individual in `create payee` operation."""
+
     def __init__(self, first_name, middle_name, last_name, id_type, id_number, email, country_code, phone_number,
                  phone_area_code, nickname):
         """Initialize BaseInfoIndividual object.
@@ -99,8 +102,19 @@ class BaseInfoIndividual(object):
 
 
 class BaseInfoCorporate(object):
+    """BaseInfoCorporate object for individual in `create payee` operation."""
+
     def __init__(self, country_code, corporate_name, corporate_phone_number,
                  corporate_phone_area_code, corporate_registration_number=None):
+        """Initialize BaseInfoCorporate object.
+
+        Args:
+            country_code (str): The country code
+            corporate_name (str): The corporate name
+            corporate_phone_number (str): The corporate phone number
+            corporate_phone_area_code (str): The corporate phone area code
+            corporate_registration_number (str): The corporate registration number
+        """
         self.country_code = country_code
         self.corporate_name = corporate_name
         self.corporate_phone_number = corporate_phone_number
@@ -111,17 +125,38 @@ class BaseInfoCorporate(object):
 
 
 class Address(object):
-    def __init__(self, country_code, city, state, line1, line2, postcode):
+    """Address object for Payee"""
+
+    def __init__(self, country_code, city, state, line1, postcode, line2=None):
+        """Initialize Address object.
+
+        Args:
+            country_code (str): Two-letter ISO 3166-2 country code.
+            city (str): City, district, suburb, town, or village.
+            state (str): State, county, province, or region
+            line1 (str): Address line1 (e.g. street, PO Box, or company name)
+            line2 (str): Address line2 (e.g. apartment, suite, unit, or building)
+            postcode (str): ZIP or postal code.
+        """
         self.country_code = country_code
         self.city = city
         self.state = state
         self.line1 = line1
-        self.line2 = line2
+        if line2 is not None:
+            self.line2 = line2
         self.postcode = postcode
 
 
 class RoutingInfo(object):
+    """RoutingInfo object for Payee"""
+
     def __init__(self, bank_routing_type, bank_routing_number):
+        """Initialize RoutingInfo object.
+
+        Args:
+            bank_routing_type (str): Routing number type. Allowed values: ABA, SORT, BSB, BANKCODE, BRANCHCODE
+            bank_routing_number (str): The routing transit number for the bank account.
+        """
         if bank_routing_type not in ['ABA', 'SORT', 'BSB', 'BANKCODE', 'BRANCHCODE']:
             raise ValueError('bank_routing_type must be ABA, SORT, BSB, BANKCODE or BRANCHCODE')
         self.bank_routing_type = bank_routing_type
@@ -129,8 +164,24 @@ class RoutingInfo(object):
 
 
 class BankInfo(object):
+    """BankInfo object for Payee"""
+
     def __init__(self, bank_country_code, holder_name, holder_type, account_currency, account_number, bank_name,
                  bank_address=None, swift_code=None, iban=None, routing_info=None):
+        """Initialize BankInfo object.
+
+        Args:
+            bank_country_code (str): Bank country code, Two-letter ISO 3166-2 country code.
+            holder_name (str): The name of the person or business that owns the bank account.
+            holder_type (str): The type of entity that holds the account. This can be either INDIVIDUAL or CORPORATE.
+            account_currency (str): Three-letter ISO 4217 currency code.
+            account_number (str): Account number.
+            bank_name (str): Name of the bank associated with the routing number (e.g., WELLS FARGO).
+            bank_address (str): Bank detail address.
+            swift_code (str): Bank SWIFT code.
+            iban (str): Uniquely identifies this particular bank account. You can use this attribute to check whether two bank accounts are the same.
+            routing_info (list): List of RoutingInfo object.
+        """
         self.bank_country_code = bank_country_code
         self.holder_name = holder_name
         self.holder_type = holder_type
@@ -143,18 +194,31 @@ class BankInfo(object):
             self.swift_code = swift_code
         if iban is not None:
             self.iban = iban
-        if type(routing_info) is RoutingInfo:
-            self.routing_info = routing_info.__dict__
+        if type(routing_info) is list:
+            self.routing_info = routing_info
 
 
 class AdditionalInfo(object):
+    """AdditionalInfo object"""
+
     def __init__(self, name, value):
+        """Initialize AdditionalInfo object."""
         self.name = name
         self.value = value
 
 
 class Payee(object):
+    """Payee object for `create payee` operation."""
     def __init__(self, base_info, address, bank_info, file_folder_id, additional_info=None):
+        """Initialize Payee object.
+
+        Args:
+            base_info (BankInfo): BaseInfo object
+            address (Address): Address object
+            bank_info (BankInfo): BankInfo object
+            file_folder_id (int or str): The ID of File Folder.
+            additional_info (AdditionalInfo): AdditionalInfo object
+        """
         if type(base_info) is BaseInfoIndividual:
             self.entity_type = 'INDIVIDUAL'
         elif type(base_info) is BaseInfoCorporate:
@@ -181,7 +245,16 @@ class Payee(object):
 
 
 class Conversion(object):
+    """Conversion object for `create conversion` operation."""
     def __init__(self, quote_response, sell_amount, buy_amount=None, request_id=None):
+        """Initialize Conversion object.
+
+        Args:
+            quote_response (dict): Response from `create quote` operation. Can be constructed manually, contain keys of `sell_currency`, `buy_currency` and `id`
+            sell_amount (int): Amount in sell_currency that the client sells. Must be specified if buy_amount is not specified.
+            buy_amount (int): Amount in buy_currency that the client buys. Must be specified if sell_amount is not specified.
+            request_id (int): The idempotent value generated by the client must be unique on each request. Conversion requests with the same request_id will be rejected. The parameter contains a maximum of 128 characters.
+        """
         if request_id is None:
             self.request_id = utils.timestamp()
         else:
@@ -201,8 +274,21 @@ class Conversion(object):
 
 
 class Payout(object):
+    """Payout object for `create payout` operation."""
     def __init__(self, payee_id, quote_response, send_amount, file_folder_id, purpose, reference, additional_info=None,
                  request_id=None):
+        """Initialize Payout object.
+
+        Args:
+            payee_id (int): Payee id from the response of `create payee` operation.
+            quote_response (dict): Response from `create quote` operation. Can be constructed manually, contain keys of `sell_currency`, `buy_currency` and `id`
+            send_amount (int): Amount paid to payee, main currency unit, rounded up to 2 decimal places.
+            file_folder_id (int): The ID of File Folder.
+            purpose (str): Purpose of send a payment
+            reference (str): This is the postscript information visible to the payee.
+            additional_info (AdditionalInfo): AdditionalInfo object
+            request_id (str): The idempotent value generated by the client must be unique on each request. Conversion requests with the same request_id will be rejected. The parameter contains a maximum of 128 characters.
+        """
         self.payee_id = str(payee_id)
         self.rate_id = quote_response['id']
         self.pay_currency = quote_response['sell_currency']
@@ -232,12 +318,24 @@ class Payout(object):
 
 
 class FileInfo(object):
-    def __init__(self, file_id=None, file_name=None, title=None, page_size=20, page_number=1, start_time=None,
+    """FileInfo object for `get file infos` operation."""
+    def __init__(self, file_id=None, name=None, title=None, page_size=20, page_number=1, start_time=None,
                  end_time=None):
+        """Initialize FileInfo object.
+
+        Args:
+            file_id (int): The ID of File.
+            name (str): A file name in the server, require exact match.
+            title (str): User naming the file when uploading, require exact match.
+            page_size (int): The default value is 20. A maximum of 100 data items can be displayed on a page.
+            page_number (int): The query page number.
+            start_time (int): File object creation period start time.
+            end_time (int): File object creation period end time.
+        """
         if file_id is not None:
             self.file_id = str(file_id)
-        if file_name is not None:
-            self.file_name = file_name
+        if name is not None:
+            self.name = name
         if title is not None:
             self.title = title
         self.page_size = int(page_size)
@@ -255,7 +353,16 @@ class FileInfo(object):
 
 
 class FileFolderInfo(object):
+    """FileFolderInfo object for `create file folder` operation."""
     def __init__(self, file_ids, file_folder_name, purpose, additional_info=None):
+        """Initialize FileFolderInfo object.
+        
+        Args:
+            file_ids (list): List of file ids.
+            file_folder_name (str): File folder name.
+            purpose (str): The purpose of the upload file. Allowed values: PAYOUT, PAYEE
+            additional_info (AdditionalInfo): AdditionalInfo object
+        """
         if purpose not in ['PAYOUT', 'PAYEE']:
             raise ValueError('purpose must be PAYOUT or PAYEE')
         self.purpose = str(purpose)

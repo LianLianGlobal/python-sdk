@@ -17,12 +17,34 @@ _config = {
 
 
 def get_config(key=None):
+    """Get config value by key.
+
+    If key is None, return all config.
+    
+    Args: key (str): config key, allowed keys: **default_host**, **connection_timeout**, 
+    **file_connection_timeout**, **default_upload_threshold**. 
+
+    Returns: 
+        (str or int): config value
+
+    """
     if key:
         return _config[key]
     return _config
 
 
 def set_config(default_host=None, connection_timeout=None, file_connection_timeout=None, default_upload_threshold=None):
+    """Set config value by key.
+
+    Args:
+        default_host (str): The current production environment is only **US_HOST**
+        connection_timeout (): HTTP connection timeout period
+        file_connection_timeout (): HTTP connection timeout period for file upload or download
+        default_upload_threshold (): File upload limit size, default is 10MB
+
+    Returns:
+
+    """
     if default_host:
         _config['default_host'] = default_host
     if connection_timeout:
