@@ -1,6 +1,6 @@
 import ewallet
 
-auth = ewallet.TokenAuth('8ZCZo2rqOb2swvSzTlc7v472G', 'czCAB1FftSbNfLnP1jTOYkmg1RtDfecR')
+auth = ewallet.Auth('8ZCZo2rqOb2swvSzTlc7v472G', 'czCAB1FftSbNfLnP1jTOYkmg1RtDfecR')
 
 filepaths = [
     r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.zip',

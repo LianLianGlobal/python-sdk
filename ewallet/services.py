@@ -15,7 +15,7 @@ def get_balances(auth):
     """Get all balances of the authed account.
 
     Args:
-        auth (TokenAuth): The auth token
+        auth (Auth): The auth token
 
     Returns:
         (dict, int): The response json and status code
@@ -30,7 +30,7 @@ def create_quote(auth, quote):
     """Create a LockFX quote.
 
     Args:
-        auth (TokenAuth): The auth token
+        auth (Auth): The auth token
         quote (Quote): Quote object in models file
 
     Returns:
@@ -40,6 +40,7 @@ def create_quote(auth, quote):
     """
     connect = Connect('/gateway/v1/ew-conversions/lockfx', auth)
     response = connect.post(quote.to_json())
+    # todo: warp response
     return response.json(), response.status_code
 
 
@@ -47,8 +48,8 @@ def create_conversion(auth, conversion):
     """Create a conversion.
 
     Args:
-        auth (TokenAuth): The auth token
-        conversion (): Conversion object in models file
+        auth (Auth): The auth token
+        conversion (Conversion): Conversion object in models file
 
     Returns:
         (dict, int): The response json and status code
@@ -70,7 +71,7 @@ def create_payee(auth, payee):
     """Create a payee.
 
     Args:
-        auth (TokenAuth): The auth token
+        auth (Auth): The auth token
         payee (Payee): Payee object in models file
 
     Returns:
@@ -100,7 +101,7 @@ def create_payout(auth, payout):
     """Create a payout.
 
     Args:
-        auth (TokenAuth): The auth token
+        auth (Auth): The auth token
         payout (Payout): Payout object in models file
 
     Returns:
@@ -125,7 +126,7 @@ def upload_file(auth, file_path, title=None, notes=None):
     The file will be used for `PAYOUT` or `PAYEE` operation.
 
     Args:
-        auth (TokenAuth): The auth token
+        auth (Auth): The auth token
         file_path (str): The local path of the file
         title (str): Additional information
         notes (str): Additional information
@@ -169,7 +170,7 @@ def download_file(auth, file_id, dir_path):
     """Download a file from LianLianGlobal File Server by file id.
 
     Args:
-        auth (TokenAuth): The auth token
+        auth (Auth): The auth token
         file_id (int or str): The file id, can be obtained from the response of `upload_file` or `get_file_infos`
         dir_path (str): The local path of the directory to save the file
 
@@ -187,7 +188,7 @@ def get_file_infos(auth, file_info):
     """Get file infos by file info.
 
     Args:
-        auth (TokenAuth): The auth token
+        auth (Auth): The auth token
         file_info (FileInfo): FileInfo object in models file
 
     Returns:
@@ -207,7 +208,7 @@ def create_file_folder(auth, file_folder_info):
     The file ids in file folder info is related with LianLianGlobal File Server.
 
     Args:
-        auth (TokenAuth): The auth token
+        auth (Auth): The auth token
         file_folder_info (FileFolderInfo): FileFolderInfo object in models file
 
     Returns:

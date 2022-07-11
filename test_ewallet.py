@@ -1,4 +1,3 @@
-import os.path
 import unittest
 
 import ewallet
@@ -6,7 +5,24 @@ from ewallet import utils
 from ewallet.models import Quote, Conversion, Payee, BaseInfoIndividual, BankInfo, Address, Payout, AdditionalInfo, \
     FileFolderInfo
 
-auth = ewallet.TokenAuth('8ZCZo2rqOb2swvSzTlc7v472G', 'czCAB1FftSbNfLnP1jTOYkmg1RtDfecR')
+auth = ewallet.Auth('8ZCZo2rqOb2swvSzTlc7v472G', 'czCAB1FftSbNfLnP1jTOYkmg1RtDfecR')
+private_key = '''
+MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAKlj9csqMDEPlXOm
+QEQA70E1KjhO1cNHGgkpIEUjI90JaxLzaphOs0D6a98mPApb7MR2dAKtPie7BXQX
+2WuZzcuh5CR5JZvtup7o5ShTmtcMQhBRdKTyKf0hNq86M51pptg5Gi6lNjup3S2Q
+ylaAxmZeux4+s6kKF5VNgtRwYA8bAgMBAAECgYBOfvYOOfSvJ4uYVjh9yvkUfLCd
++1pv7ekQybAcmdYqvgyScZ66Ce5jdCi89hjorASiXkoQW3vsKWyzicHFbTbCHcDv
+AYzw/sNexEuOCnkIwKoX76uNjIVC5NRHeMNZmyLn2sg1ObEawc20FhBrD2bvetTL
+5cB4bBH8jMi1fb3/MQJBAPAx5b/dAOJOHkszfJUC7Ob8xa21J6IedA16ygtyzGq8
+HXjMeg6amaaP1LQ0V88pv0E2+L3fPwQkwNC57639oS8CQQC0iVstX5RarHfrcZ8m
+mlCqiCpF2V/PK4V8Q+AVHvgnjxxZXRBM+6gOun3VuFxC5o3YlBa2qBdPR9frjYxq
+a33VAkEAjF3skNo7eQUD6RiWlpJWFYrkjuYN2k0HrxTx3AzjbwCuDHkaX0xzvIXT
+XNg19IfGD/trE7LSJb7Au3ndmoVc2wJBAKn2DfJfYwkiCRuMsinjaUHCQxnTFRGy
+hU6Bj/oSV8jWP/gZVvlCieqjw0dq8uDAsJVOhTucb6Vhm3LUpXaij6kCQQDBotXg
+MLlmtKGkXYqs0q1EfeF9CxN/FA8d8oMMdg3ez/2Wz1gMZivJL0MRR7a2FwqRFUuN
+a6u2h5l6PZgtZk6x
+'''
+ewallet.set_config(private_key=private_key)
 
 
 class BalanceTest(unittest.TestCase):
@@ -103,36 +119,36 @@ class PayoutTest(unittest.TestCase):
 
 
 class SupportServiceTest(unittest.TestCase):
-    def test_upload_file(self):
-        filepaths = [
-            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.zip',
-            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.rar',
-            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.pdf',
-            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.png',
-            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.jpg',
-            r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.jpeg'
-        ]
-        if not os.path.exists(filepaths[0]):
-            self.skipTest("File not exist.")
-        for filepath in filepaths:
-            (_, filename) = os.path.split(filepath)
-            data, code = ewallet.upload_file(auth, filepath, 'test title', 'test notes')
-            self.assertEqual(200, code)
-            self.assertIn('id', data)
-            self.assertEqual(filename, data['name'])
-
-    def test_download_file(self):
-        dir_path = 'C:\\Users\\yangdm002\\Desktop\\OpenAPI test case\\files'
-        if not os.path.exists(dir_path):
-            self.skipTest("Directory not exist.")
-        file_ids = [
-            "8536706480177799168",
-            "8536706480179634176",
-            "8536706734738235392",
-            "8536706734739808256"
-        ]
-        for file_id in file_ids:
-            assert ewallet.download_file(auth, file_id, dir_path)
+    # def test_upload_file(self):
+    #     filepaths = [
+    #         r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.zip',
+    #         r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.rar',
+    #         r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.pdf',
+    #         r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.png',
+    #         r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.jpg',
+    #         r'C:\Users\yangdm002\Desktop\OpenAPI test case\files\test_1MB.jpeg'
+    #     ]
+    #     if not os.path.exists(filepaths[0]):
+    #         self.skipTest("File not exist.")
+    #     for filepath in filepaths:
+    #         (_, filename) = os.path.split(filepath)
+    #         data, code = ewallet.upload_file(auth, filepath, 'test title', 'test notes')
+    #         self.assertEqual(200, code)
+    #         self.assertIn('id', data)
+    #         self.assertEqual(filename, data['name'])
+    #
+    # def test_download_file(self):
+    #     dir_path = 'C:\\Users\\yangdm002\\Desktop\\OpenAPI test case\\files'
+    #     if not os.path.exists(dir_path):
+    #         self.skipTest("Directory not exist.")
+    #     file_ids = [
+    #         "8536706480177799168",
+    #         "8536706480179634176",
+    #         "8536706734738235392",
+    #         "8536706734739808256"
+    #     ]
+    #     for file_id in file_ids:
+    #         assert ewallet.download_file(auth, file_id, dir_path)
 
     def test_create_file_folder(self):
         file_ids = [

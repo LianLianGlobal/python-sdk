@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setuptools.setup(
     name="python-sdk-ewallet",
-    version="0.0.1",
+    version="0.0.2",
     author="yangdm002",
     author_email="yangdm002@lianlianpay.com",
     description="Python SDK for LianLian Global e-wallet program",

@@ -16,8 +16,9 @@ pip install python-sdk-ewallet
 ```python
 import ewallet
 
-ewallet.set_config(default_host=ewallet.TEST_HOST)
-auth = ewallet.TokenAuth('8ZCZo2rqOb2swvSzTlc7v472G', 'czCAB1FftSbNfLnP1jTOYkmg1RtDfecR')
+private_key = 'XXX'
+ewallet.set_config(default_host=ewallet.TEST_HOST, private_key=private_key)
+auth = ewallet.Auth('8ZCZo2rqOb2swvSzTlc7v472G', 'czCAB1FftSbNfLnP1jTOYkmg1RtDfecR')
 data, code = ewallet.get_balances(auth)
 if code == 200:
     print(data)

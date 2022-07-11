@@ -9,6 +9,8 @@ import os
 
 import requests
 import logging
+
+from ewallet import utils
 from ewallet.config import get_config
 
 
@@ -21,6 +23,7 @@ class Connect(object):
         router: router of LianLianGlobal ewallet OpenAPI.
         auth: authentication token.
     """
+
     def __init__(self, router, auth):
         """Initialize Connect object.
         
@@ -28,6 +31,7 @@ class Connect(object):
             router (str): Router of LianLianGlobal ewallet OpenAPI
             auth (TokenAuth): TokenAuth
         """
+        self.router = router
         self.url = get_config('default_host') + router
         self.auth = auth
         self.headers = {'Content-Type': 'application/json'}
@@ -52,6 +56,10 @@ class Connect(object):
         """
         if path_param is not None:
             self.url += '/' + str(path_param)
+            self.router += '/' + str(path_param)
+        self.headers['LLPAY-Signature'] = utils.generation_signature(get_config('private_key'),
+                                                                     get_config('private_key_path'), 'GET',
+                                                                     self.router, data or '')
         try:
             response = self._session.get(self.url, auth=self.auth, headers=self.headers, data=data,
                                          timeout=get_config('connection_timeout'))
@@ -73,6 +81,9 @@ class Connect(object):
             response (Response): Response object
 
         """
+        self.headers['LLPAY-Signature'] = utils.generation_signature(get_config('private_key'),
+                                                                     get_config('private_key_path'), 'POST',
+                                                                     self.router, data or '')
         try:
             response = self._session.post(self.url, auth=self.auth, headers=self.headers, data=data,
                                           timeout=get_config('connection_timeout'))
@@ -94,6 +105,9 @@ class Connect(object):
             response (Response): Response object
 
         """
+        self.headers['LLPAY-Signature'] = utils.generation_signature(get_config('private_key'),
+                                                                     get_config('private_key_path'), 'DELETE',
+                                                                     self.router + '/' + str(path_param))
         try:
             response = self._session.delete(self.url + '/' + str(path_param), auth=self.auth, headers=self.headers,
                                             timeout=get_config('connection_timeout'))
