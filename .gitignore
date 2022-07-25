@@ -1,2 +1,7 @@
 Test Results - .html
-/doc/
+.pypirc
+doc
+dist
+build
+.pytest_cache
+python_sdk_ewallet.egg-info

@@ -25,7 +25,7 @@ if code == 200:
 else:
     print(code, data)
 ```
-For more operation, please refer to the [SDK User Guide](https://developer.lianlianglobal.com/docs/e-wallet-openapi).
+For more operation, please refer to the [SDK User Guide](https://developer.lianlianglobal.com/docs/e-wallet-openapi/78xu0xel7j7ao-python-sdk).
 
 ### Test
 ```bash
@@ -36,6 +36,8 @@ py test_ewallet.py
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+If you have any questions while using the SDK, please feel free to [contact us](mailto:tech-ewallet@lianlianpay.com).
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
